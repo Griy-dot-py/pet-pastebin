@@ -1,0 +1,10 @@
+version: "3"
+services:
+
+  app:
+    build:
+      context: ./
+      dockerfile: pastebin/Dockerfile
+    command: python3 main.py
+    ports:
+    - 5000:5000
