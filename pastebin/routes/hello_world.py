@@ -1,4 +1,4 @@
-from init import app
+from routes import app
 from config import POSTGRES_HOST
 
 

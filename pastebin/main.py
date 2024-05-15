@@ -1,5 +1,4 @@
-from init import app
-import routes #noqa
+from routes import app
 
 
 if __name__ == "__main__":
