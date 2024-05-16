@@ -10,4 +10,4 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 
-WORKDIR /app/pastebin/
+CMD flask --app routes/ run --port 5000 --host 0.0.0.0

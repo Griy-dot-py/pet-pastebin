@@ -16,3 +16,11 @@ engine = create_engine(
     )
 )
 Session = sessionmaker(bind=engine)
+
+
+from .base import Base
+from .user import User
+from.paste import Paste
+
+
+Base.metadata.create_all(engine)
