@@ -10,3 +10,7 @@ s3 = resource(
     aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
 )
 bucket = s3.Bucket(config.BUCKET_NAME)
+
+
+from .upload import upload_to_cloud
+from .download import download_from_cloud

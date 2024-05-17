@@ -23,4 +23,5 @@ from .user import User
 from.paste import Paste
 
 
+# Base.metadata.drop_all(engine) #Only for development
 Base.metadata.create_all(engine)

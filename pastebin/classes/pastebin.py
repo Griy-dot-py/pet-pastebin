@@ -1,6 +1,9 @@
 from utils import hash_id, unhash_id
+
 from database import Paste, Session
 from sqlalchemy import select
+
+from aws import upload_to_cloud, download_from_cloud
 
 
 class Pastebin(object):   
@@ -17,11 +20,7 @@ class Pastebin(object):
     
     @property
     def is_uploaded(self) -> bool:
-        try:
-            self.__model.id
-        except AttributeError:
-            return False
-        return True
+        return self.__model.id is not None
     
     @property
     def hashed_id(self) -> str:
@@ -32,18 +31,18 @@ class Pastebin(object):
     def upload(self) -> None:
         if self.is_uploaded:
             raise FileExistsError("Pastebin is already uploaded")
-        path = ... # Загружаем текст в облако
+        path = upload_to_cloud(self.text, self.__model.user_id)
         with self.__session.begin():
             self.__model.path = path
             self.__session.add(self.__model)
     
     @classmethod
     def download(cls, hashed_id: str) -> "Pastebin":
-        model_id = unhash_id(hashed_id)
         with Session() as session:
-            model = session.scalar(select(Paste).filter_by(id=model_id))
-        text = ... #Выгружаем данные из облакa
+            model = session.scalar(select(Paste).filter_by(id=unhash_id(hashed_id)))
+        if model is None:
+            raise FileNotFoundError("Pastebin not found")
+        text = download_from_cloud(model.path)
         pastebin = cls(text=text, user_id=model.user_id)
         pastebin.__model = model
         return pastebin
-    
