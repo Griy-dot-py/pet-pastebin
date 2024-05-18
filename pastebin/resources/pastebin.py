@@ -3,6 +3,7 @@ from flask_restful import Resource
 
 from schemas import PastebinSchema
 from marshmallow import ValidationError
+from binascii import Error as DecodingError
 
 from classes import Pastebin
 
@@ -26,7 +27,7 @@ class PastebinResource(Resource):
             return "pastebin ID is required", 400
         try:
             paste = Pastebin.download(id)
-        except FileNotFoundError:
+        except (FileNotFoundError, DecodingError):
             return "pastebin not found", 404
         
         return self.schema.dump(paste), 200
