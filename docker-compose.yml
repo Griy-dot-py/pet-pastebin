@@ -14,7 +14,7 @@ services:
     build:
       context: ./
       dockerfile: pastebin/Dockerfile
-    command: flask --app pastebin/routes/ run --port 5000 --host 0.0.0.0
+    command: flask --app pastebin/resources/ run --port 5000 --host 0.0.0.0
     ports:
     - 5000:5000
     depends_on:
