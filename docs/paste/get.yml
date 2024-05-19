@@ -1,0 +1,17 @@
+Get paste by hash
+---
+tags:
+- paste
+parameters:
+- name: hash
+  description: unique eight-digit paste hash
+  in: path
+  type: string
+  required: true
+responses:
+    404:
+      description: "paste not found"
+    200:
+      description: "your paste"
+      schema:
+        $ref: "#/definitions/PasteOut"

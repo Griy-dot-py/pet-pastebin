@@ -1,0 +1,17 @@
+Post a new paste
+---
+tags:
+- paste
+parameters:
+- name: paste_data
+  schema:
+    $ref: "#/definitions/PasteIn"
+  in: body
+  required: true
+responses:
+  400:
+    description: "Validation error"
+  201:
+    description: new paste posted
+    schema:
+      $ref: "#/definitions/PasteHash"

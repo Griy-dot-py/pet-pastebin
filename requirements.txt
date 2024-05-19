@@ -1,4 +1,7 @@
+apispec==6.6.1
+apispec-webframeworks==1.1.0
 boto3==1.34.105
+flasgger==0.9.7b2
 Flask==3.0.3
 Flask-RESTful==0.3.10
 marshmallow==3.21.2

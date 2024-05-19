@@ -23,7 +23,7 @@ class Pastebin(object):
         return self.__model.id is not None
     
     @property
-    def hashed_id(self) -> str:
+    def hash(self) -> str:
         if not self.is_uploaded:
             raise AttributeError("Pastebin is not uploaded yet")
         return hash_id(self.__model.id)

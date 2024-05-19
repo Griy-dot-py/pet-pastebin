@@ -1,12 +1,14 @@
+from schemas import PasteBaseSchema
+
 from database import Session, User
 
-from marshmallow import Schema, fields, validates, ValidationError
+from flasgger import fields
+from marshmallow import validates, ValidationError
 
 import sys
 
 
-class PastebinSchema(Schema):
-    text = fields.Str(required=True)
+class PasteInSchema(PasteBaseSchema):
     user_id = fields.Int(required=True, load_only=True)
     
     @validates("text")
