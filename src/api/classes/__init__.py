@@ -1,1 +1,1 @@
-from .pastebin import Pastebin
+from .paste import Paste

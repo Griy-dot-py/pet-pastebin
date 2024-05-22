@@ -6,7 +6,7 @@ from flasgger import swag_from
 from schemas import PasteInSchema, PasteHashSchema
 from marshmallow import ValidationError
 
-from classes import Pastebin
+from classes import Paste
 
 
 @api.resource("/pastebin/")
@@ -21,6 +21,6 @@ class NewPasteResource(Resource):
         except ValidationError as exc:
             return exc.messages, 400
         
-        paste = Pastebin(**data)
+        paste = Paste(**data)
         paste.upload()
         return self.return_schema.dump(paste), 201
