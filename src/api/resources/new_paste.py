@@ -14,7 +14,7 @@ class NewPasteResource(Resource):
     schema = PasteInSchema()
     return_schema = PasteHashSchema()
     
-    @swag_from("../../docs/paste/post.yml")
+    @swag_from("../../../docs/paste/post.yml")
     def post(self):
         try:
             data = self.schema.load(request.json)

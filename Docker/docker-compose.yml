@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+
+  database:
+    env_file: ../.env
+    image: postgres:14.12
+    ports:
+    - 5432:5432
+
+  api:
+    env_file: ../.env
+    build:
+      context: ".."
+      dockerfile: Docker/api.Dockerfile
+    ports:
+    - 5000:5000
+    depends_on:
+    - database

@@ -10,4 +10,5 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 
-CMD flask --app routes/ run --port 5000 --host 0.0.0.0
+ENTRYPOINT ["flask"]
+CMD ["--app", "src/api/resources", "run", "--port", "5000", "--host", "0.0.0.0"]
