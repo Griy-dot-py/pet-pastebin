@@ -6,7 +6,7 @@ from flask_restful import Resource
 from schemas import PasteInSchema, PasteOutSchema
 import binascii
 
-from classes import Pastebin
+from classes import Paste
 
 
 @api.resource("/pastebin/<string:hash>")
@@ -17,7 +17,7 @@ class PasteResource(Resource):
     @swag_from("../../../docs/paste/get.yml")
     def get(self, hash: str):
         try:
-            paste = Pastebin.download(hash)
+            paste = Paste.download(hash)
         except (FileNotFoundError, binascii.Error):
             return "pastebin not found", 404
         
