@@ -2,10 +2,14 @@ import os
 from dotenv import load_dotenv, find_dotenv
 
 
-if not find_dotenv("../.env"):
+ENV_PATH = "../../config/.env"
+
+
+if not find_dotenv(ENV_PATH):
     exit("Cannot load environment variables. There's no .env file")
 else:
-    load_dotenv("../.env")
+    load_dotenv(ENV_PATH)
+
 
 POSTGRES_HOST = os.getenv("POSTGRES_HOST")
 POSTGRES_DB = os.getenv("POSTGRES_DB")

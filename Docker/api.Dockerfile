@@ -10,5 +10,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 
-ENTRYPOINT ["flask"]
-CMD ["--app", "src/api/resources", "run", "--port", "5000", "--host", "0.0.0.0"]
+WORKDIR /app/src/api/
+ENTRYPOINT ["gunicorn", "-w", "4"]
+CMD ["-b", "0.0.0.0", "resources:app"]

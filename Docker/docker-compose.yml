@@ -1,15 +1,16 @@
 version: "3"
-
 services:
 
-  database:
-    env_file: ../.env
-    image: postgres:14.12
+  server:
+    build:
+      context: ".."
+      dockerfile: Docker/server.Dockerfile
     ports:
-    - 5432:5432
-
+    - 80:80
+    depends_on:
+    - api
+  
   api:
-    env_file: ../.env
     build:
       context: ".."
       dockerfile: Docker/api.Dockerfile
@@ -17,3 +18,12 @@ services:
     - 5000:5000
     depends_on:
     - database
+  
+  database:
+    image: postgres:14.12
+    environment:
+    - POSTGRES_DB=${POSTGRES_DB}
+    - POSTGRES_USER=${POSTGRES_USER}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+    - 5432:5432
