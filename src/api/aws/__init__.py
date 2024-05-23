@@ -12,5 +12,7 @@ s3 = resource(
 bucket = s3.Bucket(config.BUCKET_NAME)
 
 
-from .upload import upload_to_cloud
-from .download import download_from_cloud
+from .cloud import Cloud
+
+
+cloud = Cloud(bucket=bucket)

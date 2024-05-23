@@ -1,1 +1,2 @@
-from .paste import Paste
+from . import abc
+from .main import Paste

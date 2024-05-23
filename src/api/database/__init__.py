@@ -15,13 +15,16 @@ engine = create_engine(
         db=config.POSTGRES_DB
     )
 )
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
 
 
 from .base import Base
 from .user import User
 from.paste import Paste
+from .main import Database
 
 
 # Base.metadata.drop_all(engine) #Only for development
 Base.metadata.create_all(engine)
+
+database = Database()
