@@ -6,7 +6,7 @@ services:
       context: ".."
       dockerfile: Docker/server.Dockerfile
     ports:
-    - 80:80
+    - "80:80"
     depends_on:
     - api
   
@@ -14,10 +14,24 @@ services:
     build:
       context: ".."
       dockerfile: Docker/api.Dockerfile
-    ports:
-    - 5000:5000
     depends_on:
     - database
+    - hashcache
+  
+  generator:
+    build:
+      context: ".."
+      dockerfile: Docker/generator.Dockerfile
+    depends_on:
+    - hashcache
+  
+  hashcache:
+    image: redis
+    ports:
+      - "${HASH_CACHE_PORT}:${HASH_CACHE_PORT}"
+    volumes:
+      - ../config/hashcache.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
   
   database:
     image: postgres:14.12
