@@ -14,7 +14,7 @@ class PasteResource(Resource):
     schema = PasteInSchema()
     return_schema = PasteOutSchema()
     
-    @swag_from("../../../docs/paste/get.yml")
+    @swag_from("../docs/paste/get.yml")
     def get(self, hash: str):
         try:
             paste = Paste.download(hash)

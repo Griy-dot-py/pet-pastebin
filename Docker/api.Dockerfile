@@ -6,10 +6,11 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 
 WORKDIR /app/
-COPY requirements.txt .
+COPY src/api/requirements.txt .
 RUN pip install -r requirements.txt
-COPY . .
+COPY config/.env .env
+COPY docs/ docs/
+COPY src/api .
 
-WORKDIR /app/src/api/
 ENTRYPOINT ["gunicorn", "-w", "4"]
 CMD ["-b", "0.0.0.0", "resources:app"]
