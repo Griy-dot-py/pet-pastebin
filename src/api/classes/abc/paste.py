@@ -1,25 +1,20 @@
 from typing import Protocol, Optional
 from datetime import datetime
 
-from aws import Cloud
-from database import Database
-
-from database import Paste as PasteModel
-
 from .state import PasteState
 
 
-class PasteProtocol(Protocol):
-    text: str
-    _model: PasteModel
-    
-    _cloud: Cloud
-    _db: Database
-    
-    _state: PasteState
+class PasteProtocol(Protocol):   
+    @property
+    def state(self) -> str:
+        ...
+        
+    @state.setter
+    def state(self, state: PasteState) -> None:
+        ...
     
     @property
-    def expires(self) -> Optional[datetime]:
+    def text(self) -> Optional[datetime]:
         ...
     
     @property
@@ -29,6 +24,5 @@ class PasteProtocol(Protocol):
     def upload(self) -> None:
         ...
     
-    @classmethod
-    def download(cls) -> str:
+    def download(self) -> None:
         ...

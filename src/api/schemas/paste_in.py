@@ -1,6 +1,6 @@
 from schemas import PasteBaseSchema
 
-from database import Session, User
+from database import user_db
 
 from flasgger import fields
 from marshmallow import validates, ValidationError
@@ -19,7 +19,6 @@ class PasteInSchema(PasteBaseSchema):
     
     @validates("user_id")
     def existing_user_validator(self, user_id: int) -> None:
-        with Session() as session:
-            user = session.get(User, user_id)
-            if user is None:
-                raise ValidationError("User not found")
+        user = user_db.get(user_id)
+        if user is None:
+            raise ValidationError("User not found")

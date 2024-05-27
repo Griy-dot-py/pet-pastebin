@@ -1,22 +1,25 @@
-from classes.abc import PasteProtocol as Paste
+from classes.abc import PasteProtocol
 
-from dataclasses import dataclass
 from classes.abc import PasteState
+from database import PasteModel
 
-from utils import hash_id
 
-
-@dataclass
 class Uploaded(PasteState):
-    paste: Paste
-        
-    def upload(self):
-        raise FileExistsError("Pastebin is already uploaded")
+    def __init__(self, paste: PasteProtocol, text: str, model: PasteModel) -> None:
+        self.__paste = paste
+        self.__text = text
+        self.__model = model
     
     @property
-    def expires(self):
-        self.paste._cloud.check_expiration(self.paste._model.path)
+    def text(self) -> str:
+        return self.__text
     
     @property
-    def hash(self):
-        return hash_id(self.paste._model.id)
+    def hash(self) -> str:
+        return self.__model.hash
+            
+    def upload(self) -> None:
+        raise FileExistsError("Paste is already uploaded")
+    
+    def download(self) -> None:
+        raise FileExistsError("Paste is already uploaded")

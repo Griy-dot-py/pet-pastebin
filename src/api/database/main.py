@@ -1,19 +1,18 @@
-from typing import Optional
+from typing import Callable, Optional, Any
 
-from sqlalchemy import select
-
-
-from database import Session, Paste
+from sqlalchemy.orm import sessionmaker, Session, DeclarativeBase
 
 
 class Database:    
-    @staticmethod       
-    def add(paste: Paste) -> None:
-        with Session() as session:
-            with session.begin():
-                session.add(paste)
+    def __init__(self, sessionmaker: sessionmaker, model: DeclarativeBase) -> None:
+        self.Session: Callable[..., Session] = sessionmaker
+        self.model = model
     
-    @staticmethod
-    def get(id: int) -> Optional[Paste]:
-        with Session() as session:
-            return session.scalar(select(Paste).filter_by(id=id))
+    def add(self, model: DeclarativeBase) -> None:
+        with self.Session() as session:
+            with session.begin():
+                session.add(model)
+    
+    def get(self, identifier: Any) -> Optional[DeclarativeBase]:
+        with self.Session() as session:
+            return session.get(self.model, identifier)

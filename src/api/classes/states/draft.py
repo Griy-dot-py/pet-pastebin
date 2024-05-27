@@ -1,30 +1,41 @@
-from classes.abc import PasteProtocol as Paste
+from classes.abc import PasteProtocol
 
-from dataclasses import dataclass
+from cache import HashCache
+from aws import Cloud
+from database import Database, PasteModel
+
 from classes.abc import PasteState
 from .uploaded import Uploaded
 
 
-@dataclass
 class Draft(PasteState):
-    paste: Paste
-    lifetime_days: int
+    cloud: Cloud
+    db: Database
+    cache: HashCache
     
-    def upload(self):
-        path = self.paste._cloud.upload(
-            text=self.paste.text,
-            user_id=self.paste._model.user_id,
-            lifetime_days=self.lifetime_days
+    def __init__(self, paste: PasteProtocol, text: str, user_id: int) -> None:
+        self.__paste = paste
+        self.__text = text
+        self.__model = PasteModel(user_id=user_id)
+    
+    @property
+    def text(self) -> str:
+        return self.__text
+    
+    @property
+    def hash(self) -> None:
+        return None
+    
+    def upload(self) -> None:
+        path = self.cloud.upload(
+            text=self.__text,
+            user_id=self.__model.user_id
         )
-        self.paste._model.path = path
-        self.paste._db.add(self.paste._model)
+        self.__model.path = path
+        self.__model.hash = self.cache.get_hash()
+        self.db.add(self.__model)
         
-        self.paste._state = Uploaded(self.paste)
-        
-    @property
-    def expires(self):
-        return None
+        self.__paste.state = Uploaded(paste=self.__paste, text=self.__text, model=self.__model)
     
-    @property
-    def hash(self):
-        return None
+    def download(self) -> None:
+        raise FileNotFoundError("Paste is not uploaded yet")
