@@ -1,47 +1,51 @@
-from typing import Optional
+from typing import Optional, overload
 from datetime import datetime
 
-from database import Paste as PasteModel
-from database import database
-from aws import cloud
-
-from .states import Draft, Uploaded
-from .abc import PasteProtocol
-
-from utils import unhash_id
+from .states import Draft, Restored
+from .abc import PasteProtocol, PasteState
 
 
 class Paste(PasteProtocol):
-    _cloud = cloud
-    _db = database
+    @property
+    def state(self) -> str:
+        return type(self.__state).__name__
     
-    def __init__(self, text: str, user_id: int, lifetime_days: int = 30) -> None:
-        self.text = text
-        self._model = PasteModel(user_id=user_id)
-        self._state = Draft(self, lifetime_days)
+    @state.setter
+    def state(self, state: PasteState) -> None:            
+        self.__state = state
+    
+    @overload
+    def __init__(self, text: str, user_id: int) -> None:
+        ...
+    
+    @overload
+    def __init__(self, hash: str) -> None:
+        ...
+    
+    def __init__(
+        self,
+        text: Optional[str] = None,
+        user_id: Optional[int] = None,
+        hash: Optional[str] = None
+    ) -> None:
+        if hash is not None:
+            self.state = Restored(paste=self, hash=hash)
+        elif all((text is not None, user_id is not None)):
+            self.state = Draft(paste=self, text=text, user_id=user_id)
     
     def __repr__(self) -> str:
-        return f"Paste(text='{self.text}', hash='{self._state.hash}', expires='{self._state.expires}')"
+        return f"Paste(text='{self.text}', hash='{self.hash}')"
     
     @property
-    def expires(self) -> Optional[datetime]:
-        return self._state.expires
+    def text(self) -> Optional[datetime]:
+        return self.__state.text
     
     @property
     def hash(self) -> Optional[str]:
-        return self._state.hash
+        return self.__state.hash
     
     def upload(self) -> None:
-        return self._state.upload()
+        self.__state.upload()
     
-    @classmethod
-    def download(cls, hash: str) -> "Paste":
-        model = cls._db.get(unhash_id(hash))
-        if model is None:
-            raise FileNotFoundError("Paste not found")
-        text = cls._cloud.download(model.path)
-        
-        paste = cls(text=text, user_id=model.user_id)
-        paste._state = Uploaded(paste)
-        paste._model = model
-        return paste
+    def download(self) -> None:
+        self.__state.download()

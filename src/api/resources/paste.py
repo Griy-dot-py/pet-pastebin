@@ -17,8 +17,9 @@ class PasteResource(Resource):
     @swag_from("../docs/paste/get.yml")
     def get(self, hash: str):
         try:
-            paste = Paste.download(hash)
+            paste = Paste(hash=hash)
+            paste.download()
         except (FileNotFoundError, binascii.Error):
-            return "pastebin not found", 404
+            return "paste not found", 404
         
         return self.return_schema.dump(paste), 200

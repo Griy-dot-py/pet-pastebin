@@ -2,13 +2,16 @@ from typing import Protocol, Optional
 
 
 class PasteState(Protocol):
-    def upload(self) -> None:
-        ...
-    
     @property
-    def expires(self) -> Optional[str]:
+    def text(self) -> Optional[str]:
         ...
     
     @property
     def hash(self) -> Optional[str]:
+        ...
+    
+    def upload(self) -> None:
+        ...
+    
+    def download(self) -> None:
         ...

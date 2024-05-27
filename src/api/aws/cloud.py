@@ -12,14 +12,13 @@ class Cloud(object):
     def  __init__(self, bucket: Bucket) -> None:
         self._bucket = bucket
     
-    def upload(self, text: str, user_id: int, lifetime_days: int = 30) -> PathLike:
+    def upload(self, text: str, user_id: int) -> PathLike:
         path = self.PATH.format(
             user_id=user_id,
             name=datetime.now().strftime(self.FILENAME_FORMAT)
         )
         self._bucket.Object(path).put(
-            Body=text,
-            Expires=calculate_expiration(lifetime_days)
+            Body=text
         )
         return path
     
