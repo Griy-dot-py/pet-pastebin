@@ -48,7 +48,7 @@ services:
     ports:
       - "${METADATA_CACHE_PORT}:${METADATA_CACHE_PORT}"
     volumes:
-      - ../config/metadata.conf:/usr/local/etc/redis/redis.conf
+      - ../config/metadatacache.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
   
   database:
