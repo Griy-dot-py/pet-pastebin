@@ -1,6 +1,5 @@
 from os import PathLike
 from datetime import datetime
-from utils import calculate_expiration
 
 from mypy_boto3_s3.service_resource import Bucket
 
@@ -26,7 +25,3 @@ class Cloud(object):
         response = self._bucket.Object(path).get()
         content = response["Body"].read()
         return content.decode()
-
-    def check_expiration(self, path: PathLike) -> datetime:
-        response = self._bucket.Object(path).get()
-        return response["Expires"]

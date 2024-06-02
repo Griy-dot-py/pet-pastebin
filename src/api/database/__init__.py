@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-import config
+import config.postgres as config
 
 
 engine = create_engine(
@@ -9,10 +9,10 @@ engine = create_engine(
     .format(
         dialect="postgresql",
         driver="psycopg2",
-        user=config.POSTGRES_USER,
-        passw=config.POSTGRES_PASSWORD,
-        host=config.POSTGRES_HOST,
-        db=config.POSTGRES_DB
+        user=config.USER,
+        passw=config.PASSWORD,
+        host=config.HOST,
+        db=config.DB
     )
 )
 Session = sessionmaker(bind=engine, expire_on_commit=False)
