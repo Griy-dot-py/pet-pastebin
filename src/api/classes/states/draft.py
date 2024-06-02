@@ -27,15 +27,16 @@ class Draft(PasteState):
         return None
     
     def upload(self) -> None:
-        path = self.cloud.upload(
+        self.__model.hash = self.cache.get_hash()
+        self.__model.path = self.cloud.upload(
             text=self.__text,
             user_id=self.__model.user_id
         )
-        self.__model.path = path
-        self.__model.hash = self.cache.get_hash()
         self.db.add(self.__model)
-        
-        self.__paste.state = Uploaded(paste=self.__paste, text=self.__text, model=self.__model)
+        self.__paste.state = Uploaded(
+            text=self.__text,
+            hash=self.__model.hash
+        )
     
     def download(self) -> None:
         raise FileNotFoundError("Paste is not uploaded yet")

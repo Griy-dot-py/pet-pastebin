@@ -1,14 +1,10 @@
-from classes.abc import PasteProtocol
-
 from classes.abc import PasteState
-from database import PasteModel
 
 
 class Uploaded(PasteState):
-    def __init__(self, paste: PasteProtocol, text: str, model: PasteModel) -> None:
-        self.__paste = paste
+    def __init__(self, text: str, hash: str) -> None:
         self.__text = text
-        self.__model = model
+        self.__hash = hash
     
     @property
     def text(self) -> str:
@@ -16,10 +12,10 @@ class Uploaded(PasteState):
     
     @property
     def hash(self) -> str:
-        return self.__model.hash
+        return self.__hash
             
     def upload(self) -> None:
         raise FileExistsError("Paste is already uploaded")
     
     def download(self) -> None:
-        raise FileExistsError("Paste is already uploaded")
+        raise FileExistsError("Paste is already downloaded")

@@ -17,6 +17,8 @@ services:
     depends_on:
     - database
     - hashcache
+    - textcache
+    - metadatacache
   
   generator:
     build:
@@ -26,11 +28,27 @@ services:
     - hashcache
   
   hashcache:
-    image: redis
+    image: redis:7.0.15-alpine
     ports:
       - "${HASH_CACHE_PORT}:${HASH_CACHE_PORT}"
     volumes:
       - ../config/hashcache.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+  
+  textcache:
+    image: redis:7.0.15-alpine
+    ports:
+      - "${TEXT_CACHE_PORT}:${TEXT_CACHE_PORT}"
+    volumes:
+      - ../config/textcache.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+  
+  metadatacache:
+    image: redis:7.0.15-alpine
+    ports:
+      - "${METADATA_CACHE_PORT}:${METADATA_CACHE_PORT}"
+    volumes:
+      - ../config/metadata.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
   
   database:

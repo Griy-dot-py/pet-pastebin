@@ -1,15 +1,8 @@
-from typing import Any
-from redis import Redis
+from .abc import Cache
 
 
-class HashCache:
-    def __init__(self, cache: Redis) -> None:
-        self.__cache = cache
-    
-    def __del__(self) -> None:
-        self.__cache.close()
-    
+class HashCache(Cache):
     def get_hash(self) -> str:
-        key: bytes = self.__cache.randomkey()
-        self.__cache.delete(key)
-        return key.decode()
+        key = self.cache.randomkey().decode()
+        self.cache.delete(key)
+        return key
