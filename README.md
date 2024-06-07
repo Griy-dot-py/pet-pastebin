@@ -11,7 +11,7 @@ docker compose -f Docker/docker-compose.yml exec api bash
 ### Running services separately:
 ##### database:
 ```
-docker run --name pastebin-database -e POSTGRES_DB=... -e POSTGRES_USER=... -e POSTGRES_PASSWORD=... -d --restart unless-stopped postgres:14.12
+docker run --name pastebin-database -e POSTGRES_DB=pastebin -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d --restart unless-stopped postgres:14.12
 ```
 ##### hashcache:
 ```
