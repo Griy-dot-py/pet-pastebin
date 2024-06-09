@@ -49,3 +49,6 @@ class Paste(PasteProtocol):
     
     def download(self) -> None:
         self.__state.download()
+
+    def delete(self) -> None:
+        self.__state.delete()

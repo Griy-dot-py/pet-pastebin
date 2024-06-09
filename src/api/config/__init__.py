@@ -12,3 +12,5 @@ from . import aws
 from . import hash_cache
 from . import metadata_cache
 from . import text_cache
+from . import broker
+from . import apidocs

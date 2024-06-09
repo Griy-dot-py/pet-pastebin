@@ -26,3 +26,6 @@ class PasteProtocol(Protocol):
     
     def download(self) -> None:
         ...
+
+    def delete(self) -> None:
+        ...

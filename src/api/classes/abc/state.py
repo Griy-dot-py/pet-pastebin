@@ -15,3 +15,6 @@ class PasteState(Protocol):
     
     def download(self) -> None:
         ...
+    
+    def delete(self) -> None:
+        ...

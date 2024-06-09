@@ -1,22 +1,26 @@
-from classes.abc import PasteProtocol
+from datetime import timedelta, datetime
+from typing import Optional
 
-from cache import HashCache
-from aws import Cloud
-from database import Database, PasteModel
-
-from classes.abc import PasteState
+from classes.abc import PasteProtocol, PasteState
 from .uploaded import Uploaded
 
+from cache import hash_cache
+from aws import cloud
+from database import PasteModel, paste_db as db
+from tasks.tasks import del_paste
 
-class Draft(PasteState):
-    cloud: Cloud
-    db: Database
-    cache: HashCache
-    
-    def __init__(self, paste: PasteProtocol, text: str, user_id: int) -> None:
+
+class Draft(PasteState):  
+    def __init__(
+        self,
+        paste: PasteProtocol, text: str,
+        user_id: int,
+        expires: Optional[timedelta] = None
+    ) -> None:
         self.__paste = paste
         self.__text = text
         self.__model = PasteModel(user_id=user_id)
+        self.__expires = expires
     
     @property
     def text(self) -> str:
@@ -27,16 +31,26 @@ class Draft(PasteState):
         return None
     
     def upload(self) -> None:
-        self.__model.hash = self.cache.get_hash()
-        self.__model.path = self.cloud.upload(
-            text=self.__text,
-            user_id=self.__model.user_id
-        )
-        self.db.add(self.__model)
+        self.__model.hash = hash_cache.get_hash()
+        self.__model.path = cloud.upload(self.__text, self.__model.user_id)
+        db.add(self.__model)
         self.__paste.state = Uploaded(
+            paste=self.__paste,
             text=self.__text,
             hash=self.__model.hash
         )
+        if self.__expires is not None:
+            self.__set_paste_expiration()
     
     def download(self) -> None:
         raise FileNotFoundError("Paste is not uploaded yet")
+
+    def delete(self) -> None:
+        raise FileNotFoundError("Paste is not uploaded")
+
+    def __set_paste_expiration(self) -> None:
+        if self.__expires.total_seconds() / 60 < 30:
+            del_paste.apply_async(args=(self.__paste,), countdown=self.__expires)
+        else:
+            exipres_on = datetime.now() + self.__expires - timedelta(seconds=1)
+            del_paste.apply_async(args=(self.__paste,), eta=exipres_on)

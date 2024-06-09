@@ -25,3 +25,6 @@ class Cloud(object):
         response = self._bucket.Object(path).get()
         content = response["Body"].read()
         return content.decode()
+
+    def delete(self, path: PathLike) -> None:
+        self._bucket.Object(path).delete()

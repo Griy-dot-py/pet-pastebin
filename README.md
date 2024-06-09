@@ -28,10 +28,28 @@ docker run --name pastebin-textcache -d -p 6382:6379 --restart unless-stopped re
 ##### generator:
 ! copy .env into src/generator
 ```
-src/generator$ python3 main.py &
+cd src/generator
+poetry run python3 main.py &
 ```
 ##### server:
 ```
 docker build -t pastebin-server -f Docker/server.Dockerfile .
-docker run -p 80:80 --restart unless-stopped -d pastebin-server
+docker run --name pastebin-server -p 80:80 --restart unless-stopped -d pastebin-server
+```
+##### broker:
+```
+docker run --name pastebin-broker --restart unless-stopped -d -p 5672:5672 rabbitmq:3.13.3
+```
+##### autodelete:
+! copy .env into src/api
+```
+cd src/api
+poetry run celery -A tasks worker
+```
+##### api:
+configure APIDOCS_PATH in .env
+! copy .env into src/api
+```
+cd src/api
+poetry run gunicorn -w 4 -b 0.0.0.0:8000 resources:app
 ```

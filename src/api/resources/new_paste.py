@@ -5,7 +5,7 @@ from flasgger import swag_from
 
 from schemas import PasteInSchema, PasteHashSchema
 from marshmallow import ValidationError
-
+from config.apidocs import PATH as DOCS_PATH
 from classes import Paste
 
 
@@ -14,7 +14,7 @@ class NewPasteResource(Resource):
     schema = PasteInSchema()
     return_schema = PasteHashSchema()
     
-    @swag_from("../docs/paste/post.yml")
+    @swag_from(f"{DOCS_PATH}/paste/post.yml")
     def post(self):
         try:
             data = self.schema.load(request.json)

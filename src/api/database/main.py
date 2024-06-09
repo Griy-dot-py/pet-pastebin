@@ -16,3 +16,9 @@ class Database:
     def get(self, identifier: Any) -> Optional[DeclarativeBase]:
         with self.Session() as session:
             return session.get(self.model, identifier)
+
+    def delete(self, identifier: Any) -> None:
+        with self.Session() as session:
+            with session.begin():
+                model = self.get(identifier)
+                session.delete(model)

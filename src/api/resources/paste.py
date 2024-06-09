@@ -5,7 +5,7 @@ from flask_restful import Resource
 
 from schemas import PasteInSchema, PasteOutSchema
 import binascii
-
+from config.apidocs import PATH as DOCS_PATH
 from classes import Paste
 
 
@@ -14,7 +14,7 @@ class PasteResource(Resource):
     schema = PasteInSchema()
     return_schema = PasteOutSchema()
     
-    @swag_from("../docs/paste/get.yml")
+    @swag_from(f"{DOCS_PATH}/paste/get.yml")
     def get(self, hash: str):
         try:
             paste = Paste(hash=hash)
