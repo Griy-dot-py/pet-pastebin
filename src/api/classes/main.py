@@ -1,5 +1,5 @@
 from typing import Optional, overload
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .states import Draft, Restored
 from .abc import PasteProtocol, PasteState
@@ -15,7 +15,7 @@ class Paste(PasteProtocol):
         self.__state = state
     
     @overload
-    def __init__(self, text: str, user_id: int) -> None:
+    def __init__(self, text: str, user_id: int, expires: Optional[timedelta]) -> None:
         ...
     
     @overload
@@ -26,12 +26,13 @@ class Paste(PasteProtocol):
         self,
         text: Optional[str] = None,
         user_id: Optional[int] = None,
-        hash: Optional[str] = None
+        expires: Optional[timedelta] = None,
+        hash: Optional[str] = None,
     ) -> None:
         if hash is not None:
             self.state = Restored(paste=self, hash=hash)
         elif all((text is not None, user_id is not None)):
-            self.state = Draft(paste=self, text=text, user_id=user_id)
+            self.state = Draft(paste=self, text=text, user_id=user_id, expires=expires)
     
     def __repr__(self) -> str:
         return f"Paste(text='{self.text}', hash='{self.hash}')"

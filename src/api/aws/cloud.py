@@ -1,7 +1,9 @@
 from os import PathLike
+from typing import Optional
 from datetime import datetime
 
 from mypy_boto3_s3.service_resource import Bucket
+from botocore.exceptions import ClientError
 
 
 class Cloud(object):
@@ -21,8 +23,11 @@ class Cloud(object):
         )
         return path
     
-    def download(self, path: PathLike) -> str:
-        response = self._bucket.Object(path).get()
+    def download(self, path: PathLike) -> Optional[str]:
+        try:
+            response = self._bucket.Object(path).get()
+        except ClientError:
+            return None
         content = response["Body"].read()
         return content.decode()
 

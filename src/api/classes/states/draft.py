@@ -7,7 +7,7 @@ from .uploaded import Uploaded
 from cache import hash_cache
 from aws import cloud
 from database import PasteModel, paste_db as db
-from tasks.tasks import del_paste
+import tasks.tasks as tasks
 
 
 class Draft(PasteState):  
@@ -49,8 +49,9 @@ class Draft(PasteState):
         raise FileNotFoundError("Paste is not uploaded")
 
     def __set_paste_expiration(self) -> None:
-        if self.__expires.total_seconds() / 60 < 30:
-            del_paste.apply_async(args=(self.__paste,), countdown=self.__expires)
+        secs = self.__expires.total_seconds()
+        if secs < 1800:
+            tasks.del_paste.apply_async(args=(self.__paste,), countdown=secs - 3)
         else:
             exipres_on = datetime.now() + self.__expires - timedelta(seconds=1)
-            del_paste.apply_async(args=(self.__paste,), eta=exipres_on)
+            tasks.del_paste.apply_async(args=(self.__paste,), eta=exipres_on)

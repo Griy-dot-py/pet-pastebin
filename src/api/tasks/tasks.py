@@ -3,7 +3,7 @@ from . import app
 from classes.abc import PasteProtocol
 
 
-@app.task
+@app.task(serializer="pickle")
 def del_paste(paste: PasteProtocol):
     paste.delete()
 

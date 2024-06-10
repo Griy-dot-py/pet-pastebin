@@ -45,24 +45,27 @@ class Restored(PasteState):
         self.__paste.state = Deleted()
     
     def __find_path(self, *, cache_result: bool = False) -> Optional[PathLike]:
-        cached = metadata_cache.get(self.__hash)
-        if cached is not None:
-            return cached
+        path = metadata_cache.get(self.__hash)
+        if path is None:
+            model: Optional[PasteModel] = db.get(self.__hash)
+            if model is not None:
+                path = model.path
         
-        model: Optional[PasteModel] = db.get(self.__hash)
-        if model is not None:
+        if path is not None:
             if cache_result:
-                metadata_cache.set(self.__hash, model.path)
-            return model.path
+                metadata_cache.set(self.__hash, path)
+            return path
         
         raise FileNotFoundError("Paste not found")
     
     def __find_text(self, path: PathLike, *, cache_result: bool = False) -> str:
-        cached = text_cache.get(path)
-        if cached is not None:
-            return cached
+        text = text_cache.get(path)
+        if text is None:
+            text = cloud.download(path)
         
-        text = cloud.download(path)
-        if cache_result:
-            text_cache.set(path, text)
-        return text
+        if text is not None:
+            if cache_result:
+                text_cache.set(path, text)
+            return text
+        
+        raise FileNotFoundError("Paste not found")
