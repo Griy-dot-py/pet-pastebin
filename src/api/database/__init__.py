@@ -5,13 +5,14 @@ import config.postgres as config
 
 
 engine = create_engine(
-    "{dialect}+{driver}://{user}:{passw}@{host}/{db}"
+    "{dialect}+{driver}://{user}:{passw}@{host}:{port}/{db}"
     .format(
         dialect="postgresql",
         driver="psycopg2",
         user=config.USER,
         passw=config.PASSWORD,
         host=config.HOST,
+        port=config.PORT,
         db=config.DB
     )
 )

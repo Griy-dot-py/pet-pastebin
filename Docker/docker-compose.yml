@@ -26,6 +26,7 @@ services:
       dockerfile: Docker/generator.Dockerfile
     depends_on:
     - hashcache
+    - sequence
   
   hashcache:
     image: redis:7.0.15-alpine
@@ -51,6 +52,17 @@ services:
       - ../config/metadatacache.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
   
+  sequence:
+    image: postgres:14.12
+    environment:
+    - POSTGRES_DB=${SEQUENCE_DB}
+    - POSTGRES_USER=${SEQUENCE_USER}
+    - POSTGRES_PASSWORD=${SEQUENCE_PASSWORD}
+    volumes:
+    - ../config/sequence.conf:/etc/postgresql/14.12/main/postgresql.conf
+    ports:
+    - 5433:5433
+  
   database:
     image: postgres:14.12
     environment:
@@ -59,3 +71,8 @@ services:
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
     - 5432:5432
+
+  broker:
+    image: rabbitmq:3.13.3
+    ports:
+    - 5672:5672
