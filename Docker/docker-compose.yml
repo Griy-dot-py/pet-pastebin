@@ -19,6 +19,17 @@ services:
     - hashcache
     - textcache
     - metadatacache
+    - autodelete
+  
+  autodelete:
+    build:
+      context: ".."
+      dockerfile: Docker/autodelete.Dockerfile
+    depends_on:
+    - database
+    - hashcache
+    - textcache
+    - metadatacache
   
   generator:
     build:
@@ -58,10 +69,8 @@ services:
     - POSTGRES_DB=${SEQUENCE_DB}
     - POSTGRES_USER=${SEQUENCE_USER}
     - POSTGRES_PASSWORD=${SEQUENCE_PASSWORD}
-    volumes:
-    - ../config/sequence.conf:/etc/postgresql/14.12/main/postgresql.conf
     ports:
-    - 5433:5433
+    - 5433:5432
   
   database:
     image: postgres:14.12

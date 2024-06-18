@@ -16,10 +16,10 @@ RUN ./aws/install
 WORKDIR /app/
 COPY pyproject.toml .
 COPY poetry.lock .
-RUN poetry install --only main,api
+RUN poetry install --only main,queue
 COPY config/.env .env
 COPY docs/ docs/
 COPY src/api .
 
-ENTRYPOINT ["poetry", "run", "gunicorn", "-w", "4"]
-CMD ["-b", "0.0.0.0", "resources:app"]
+ENV C_FORCE_ROOT="yes" 
+ENTRYPOINT ["poetry", "run", "celery", "-A", "tasks", "worker"]
