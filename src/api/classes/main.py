@@ -15,7 +15,7 @@ class Paste(PasteProtocol):
         self.__state = state
     
     @overload
-    def __init__(self, text: str, user_id: int, expires: Optional[timedelta]) -> None:
+    def __init__(self, text: str, user_id: Optional[int] = None, expires: Optional[timedelta] = None) -> None:
         ...
     
     @overload
@@ -31,7 +31,7 @@ class Paste(PasteProtocol):
     ) -> None:
         if hash is not None:
             self.state = Restored(paste=self, hash=hash)
-        elif all((text is not None, user_id is not None)):
+        elif text is not None:
             self.state = Draft(paste=self, text=text, user_id=user_id, expires=expires)
     
     def __repr__(self) -> str:

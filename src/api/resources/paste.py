@@ -9,7 +9,7 @@ from config.apidocs import PATH as DOCS_PATH
 from classes import Paste
 
 
-@api.resource("/pastebin/<string:hash>")
+@api.resource("/paste/<string:hash>")
 class PasteResource(Resource):
     schema = PasteInSchema()
     return_schema = PasteOutSchema()

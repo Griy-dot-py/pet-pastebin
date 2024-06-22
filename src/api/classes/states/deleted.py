@@ -18,4 +18,3 @@ class Deleted(PasteState):
     
     def delete(self) -> None:
         raise FileNotFoundError("Paste is already deleted")
-    

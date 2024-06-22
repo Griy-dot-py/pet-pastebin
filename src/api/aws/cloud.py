@@ -13,7 +13,9 @@ class Cloud(object):
     def  __init__(self, bucket: Bucket) -> None:
         self._bucket = bucket
     
-    def upload(self, text: str, user_id: int) -> PathLike:
+    def upload(self, text: str, user_id: Optional[int] = None) -> PathLike:
+        if user_id is None:
+            user_id = "guest"
         path = self.PATH.format(
             user_id=user_id,
             name=datetime.now().strftime(self.FILENAME_FORMAT)

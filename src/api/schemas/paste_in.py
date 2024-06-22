@@ -1,4 +1,4 @@
-from schemas import PasteBaseSchema, TimeDeltaSchema
+from schemas import TimeDeltaSchema, PasteBaseSchema
 
 from database import user_db
 
@@ -9,7 +9,7 @@ import sys
 
 
 class PasteInSchema(PasteBaseSchema):
-    user_id = fields.Int(required=True, load_only=True)
+    user_id = fields.Int(load_only=True)
     expires = fields.Nested(TimeDeltaSchema)
     
     @validates("text")

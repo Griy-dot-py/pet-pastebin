@@ -11,9 +11,8 @@ RUN poetry self update
 WORKDIR /app/
 COPY pyproject.toml .
 COPY poetry.lock .
-RUN poetry install --only main,gen
+RUN poetry install --only main,frontend
 COPY config/.env .env
-COPY src/generator .
+COPY src/frontend .
 
-ENTRYPOINT ["poetry", "run", "python3"]
-CMD ["__init__.py"]
+ENTRYPOINT ["poetry", "run", "uvicorn", "main:app"]

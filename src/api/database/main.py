@@ -1,19 +1,19 @@
 from typing import Callable, Optional, Any
 
-from sqlalchemy.orm import sessionmaker, Session, DeclarativeBase
+from sqlalchemy.orm import sessionmaker, Session
 
 
-class Database:    
-    def __init__(self, sessionmaker: sessionmaker, model: DeclarativeBase) -> None:
+class Database[T]:
+    def __init__(self, sessionmaker: sessionmaker, model: T) -> None:
         self.Session: Callable[..., Session] = sessionmaker
         self.model = model
-    
-    def add(self, model: DeclarativeBase) -> None:
+        
+    def add(self, model: T) -> None:
         with self.Session() as session:
             with session.begin():
                 session.add(model)
     
-    def get(self, identifier: Any) -> Optional[DeclarativeBase]:
+    def get(self, identifier: Any) -> Optional[T]:
         with self.Session() as session:
             return session.get(self.model, identifier)
 

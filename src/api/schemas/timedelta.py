@@ -11,7 +11,9 @@ class TimeDeltaSchema(Schema):
     minutes = fields.Int(validate=[Range(max=59)])
     
     @post_load
-    def convert_into_timedelta(self, data: dict, **kwargs) -> timedelta:
+    def convert_into_timedelta(self, data: dict, **kwargs) -> timedelta|None:
+        if not data:
+            return None
         if "months" in data:
             as_days = data.pop("months") * 30
             if "days" not in data:

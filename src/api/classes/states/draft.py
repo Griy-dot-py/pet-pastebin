@@ -14,7 +14,7 @@ class Draft(PasteState):
     def __init__(
         self,
         paste: PasteProtocol, text: str,
-        user_id: int,
+        user_id: Optional[int] = None,
         expires: Optional[timedelta] = None
     ) -> None:
         self.__paste = paste

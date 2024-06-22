@@ -26,6 +26,7 @@ services:
       context: ".."
       dockerfile: Docker/autodelete.Dockerfile
     depends_on:
+    - broker
     - database
     - hashcache
     - textcache

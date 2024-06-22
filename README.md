@@ -4,9 +4,9 @@
 ```
 docker compose -f Docker/docker-compose.yml --env-file config/.env up --build
 ```
-### Access api:
+### Run frontend:
 ```
-docker compose -f Docker/docker-compose.yml exec api bash
+docker build -t pastebin-front -f Docker/front.Dockerfile.
 ```
 ### Running services separately:
 ##### broker:

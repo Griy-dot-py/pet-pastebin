@@ -28,5 +28,5 @@ from .main import Database
 # Base.metadata.drop_all(engine) #Only for development
 Base.metadata.create_all(engine)
 
-paste_db = Database(sessionmaker=Session, model=PasteModel)
-user_db = Database(sessionmaker=Session, model=UserModel)
+paste_db = Database[PasteModel](sessionmaker=Session, model=PasteModel)
+user_db = Database[UserModel](sessionmaker=Session, model=UserModel)
