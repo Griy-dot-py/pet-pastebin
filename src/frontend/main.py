@@ -4,7 +4,7 @@ import components as c
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectionError
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, Response
 from fastui import AnyComponent, FastUI, prebuilt_html
 from fastui.components import FireEvent, Page
 from fastui.events import GoToEvent
@@ -81,7 +81,7 @@ async def favicon():
     async with ClientSession(BACKEND_BASE_URL) as session:
         async with session.get(f"/favicon.ico") as resp:
             data = await resp.content.read()
-    return data
+    return Response(content=data)
 
 
 @app.get("/{path:path}")
