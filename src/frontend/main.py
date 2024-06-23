@@ -4,7 +4,7 @@ import components as c
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectionError
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastui import AnyComponent, FastUI, prebuilt_html
 from fastui.components import FireEvent, Page
 from fastui.events import GoToEvent
@@ -37,7 +37,7 @@ def error_page() -> list[AnyComponent]:
 @app.post("/api/paste/")
 async def post_paste(form: Annotated[NewPasteForm, fastui_form(NewPasteForm)]):
     try:
-        async with ClientSession(BACKEND_BASE_URL) as session:
+        async with ClientSession(BACKEND_BASE_URL, trust_env=True) as session:
             async with session.post(
                 "/api/paste/", json=form.model_dump(exclude_none=True)
             ) as resp:
@@ -77,10 +77,13 @@ def index() -> list[AnyComponent]:
 
 
 @app.get("/favicon.ico", include_in_schema=False)
-def favicon():
-    return FileResponse(path=f"{BACKEND_BASE_URL}/favicon.ico")
+async def favicon():
+    async with ClientSession(BACKEND_BASE_URL) as session:
+        async with session.get(f"/favicon.ico") as resp:
+            data = await resp.content.read()
+    return data
 
 
 @app.get("/{path:path}")
 async def html_landing() -> HTMLResponse:
-    return HTMLResponse(prebuilt_html(title="Pastebin"))
+    return HTMLResponse(prebuilt_html(title="Pastebin", ))
