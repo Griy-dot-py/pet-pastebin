@@ -1,4 +1,4 @@
-from . import abc
-from . import states
-
+from . import abc, states
 from .main import Paste
+
+__all__ = [abc, states, Paste]

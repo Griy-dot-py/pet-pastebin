@@ -1,6 +1,7 @@
 from celery import Task
-from . import app
 from classes.abc import PasteProtocol
+
+from . import app
 
 
 @app.task(serializer="pickle")

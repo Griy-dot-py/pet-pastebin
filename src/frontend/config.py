@@ -1,5 +1,6 @@
 import os
-from dotenv import load_dotenv, find_dotenv
+
+from dotenv import find_dotenv, load_dotenv
 
 if not find_dotenv():
     exit("Cannot load environment variables. There's no .env file")

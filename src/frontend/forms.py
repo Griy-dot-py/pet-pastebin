@@ -1,16 +1,19 @@
-import json, sys
+import json
+import sys
 
 from pydantic import BaseModel, field_validator
 
+
 class TimeDeltaForm(BaseModel):
-    months: int|None = None
-    days: int|None = None
-    hours: int|None = None
-    minutes: int|None = None
+    months: int | None = None
+    days: int | None = None
+    hours: int | None = None
+    minutes: int | None = None
+
 
 class NewPasteForm(BaseModel):
     text: str
-    expires: str|TimeDeltaForm
+    expires: str | TimeDeltaForm
 
     @field_validator("text")
     @classmethod
@@ -18,15 +21,15 @@ class NewPasteForm(BaseModel):
         if sys.getsizeof(text) / 1024**2 > 10:
             raise ValueError("Max paste size - 10Mb")
         return text
-    
+
     @field_validator("expires")
     @classmethod
-    def validate_expiration(cls, expires: str|TimeDeltaForm) -> TimeDeltaForm:
-        if type(expires) is str:
+    def validate_expiration(cls, expires: str | TimeDeltaForm) -> TimeDeltaForm:
+        if isinstance(expires, str):
             model = TimeDeltaForm(**json.loads(expires))
-        elif type(expires) is TimeDeltaForm:
+        elif isinstance(expires, TimeDeltaForm):
             model = expires
         else:
             raise ValueError("Invalid 'expires' param type")
-        
+
         return model

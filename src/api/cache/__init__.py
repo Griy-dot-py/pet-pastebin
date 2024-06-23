@@ -1,12 +1,10 @@
+import config.hash_cache as hash_config
+import config.metadata_cache as metadata_config
+import config.text_cache as text_config
 from redis import Redis
 
-import config.hash_cache as hash_config
-import config.text_cache as text_config
-import config.metadata_cache as metadata_config
-
-from .hash import HashCache
 from .data import DataCache
-
+from .hash import HashCache
 
 hash_redis = Redis(host=hash_config.HOST, port=hash_config.PORT)
 hash_cache = HashCache(cache=hash_redis)

@@ -1,1 +1,1 @@
-accept_content = ['json', "pickle"]
+accept_content = ["json", "pickle"]

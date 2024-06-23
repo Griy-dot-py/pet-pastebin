@@ -1,6 +1,5 @@
 import os
 
-
 HOST = os.getenv("SEQUENCE_HOST")
 PORT = os.getenv("SEQUENCE_PORT")
 DB = os.getenv("SEQUENCE_DB")
