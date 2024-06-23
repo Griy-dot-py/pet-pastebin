@@ -1,8 +1,10 @@
 from typing import Optional
 
-from database import Base, UserModel
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from .base import Base
+from .user import UserModel
 
 
 class PasteModel(Base):

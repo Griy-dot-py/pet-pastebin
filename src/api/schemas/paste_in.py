@@ -3,7 +3,9 @@ import sys
 from database import user_db
 from flasgger import fields
 from marshmallow import ValidationError, validates
-from schemas import PasteBaseSchema, TimeDeltaSchema
+
+from .paste_base import PasteBaseSchema
+from .timedelta import TimeDeltaSchema
 
 
 class PasteInSchema(PasteBaseSchema):

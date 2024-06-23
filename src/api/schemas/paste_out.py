@@ -1,5 +1,6 @@
 from flasgger import fields
-from schemas import PasteBaseSchema
+
+from .paste_base import PasteBaseSchema
 
 
 class PasteOutSchema(PasteBaseSchema):

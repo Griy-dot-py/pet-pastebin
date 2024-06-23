@@ -2,8 +2,9 @@ from typing import Annotated
 
 import components as c
 from aiohttp import ClientSession
+from aiohttp.client_exceptions import ClientConnectionError
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastui import AnyComponent, FastUI, prebuilt_html
 from fastui.components import FireEvent, Page
 from fastui.events import GoToEvent
@@ -35,15 +36,20 @@ def error_page() -> list[AnyComponent]:
 
 @app.post("/api/paste/")
 async def post_paste(form: Annotated[NewPasteForm, fastui_form(NewPasteForm)]):
-    async with ClientSession(BACKEND_BASE_URL) as session:
-        async with session.post(
-            "/api/paste/", json=form.model_dump(exclude_none=True)
-        ) as resp:
-            if resp.status == 201:
-                hash = (await resp.json())["hash"]
-            else:
-                print((await resp.content.read()).decode())
-                return [FireEvent(event=GoToEvent(url="/error"))]
+    try:
+        async with ClientSession(BACKEND_BASE_URL) as session:
+            async with session.post(
+                "/api/paste/", json=form.model_dump(exclude_none=True)
+            ) as resp:
+                if resp.status == 201:
+                    hash = (await resp.json())["hash"]
+                else:
+                    print((await resp.content.read()).decode())
+                    raise ClientConnectionError()
+
+    except ClientConnectionError as ex:
+        print(ex)
+        return [FireEvent(event=GoToEvent(url="/error"))]
 
     return [FireEvent(event=GoToEvent(url=f"/paste/{hash}"))]
 
@@ -68,6 +74,11 @@ async def get_paste(hash: str) -> list[AnyComponent]:
 @app.get("/api/", response_model=FastUI, response_model_exclude_none=True)
 def index() -> list[AnyComponent]:
     return [Page(components=[c.header(backend=BACKEND_BASE_URL), c.index_section()])]
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(path=f"{BACKEND_BASE_URL}/favicon.ico")
 
 
 @app.get("/{path:path}")

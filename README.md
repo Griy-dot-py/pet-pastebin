@@ -6,7 +6,8 @@ docker compose -f Docker/docker-compose.yml --env-file config/.env up --build
 ```
 ### Run frontend:
 ```
-docker build -t pastebin-front -f Docker/front.Dockerfile.
+docker build -t pastebin-front -f Docker/front.Dockerfile .
+docker run -dp 8000:8000 pastebin-front --host 0.0.0.0
 ```
 ### Running services separately:
 ##### broker:
